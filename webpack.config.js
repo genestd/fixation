@@ -23,7 +23,8 @@ module.exports={
     filename: "index_bundle.js"
   },
   devServer: {
-    contentBase: __dirname + '/server/views'
+    contentBase: __dirname + '/server/views',
+    port: 8081
   },
   module: {
     loaders: [

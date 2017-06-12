@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux'
-import books from '../reducers/books'
+import fixation from '../reducers/fixation'
 
 
 const rootReducer = combineReducers({
-  books: books,
+  fixation: fixation,
 })
 
 export default rootReducer
