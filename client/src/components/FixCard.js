@@ -20,7 +20,7 @@ class FixCard extends React.Component{
   }
 
   delete = () =>{
-    axios.post('http://localhost:8080/delete', {item: this.props.fix._id})
+    axios.post('/delete', {item: this.props.fix._id})
     .then( result=>{
       this.props.actions.refreshItems(result.data.items)
     })
@@ -28,7 +28,7 @@ class FixCard extends React.Component{
 
   addLike = () => {
     console.log(this.props)
-    axios.post('http://localhost:8080/like', {
+    axios.post('/like', {
       user: this.props.fixation.user.screen_name,
       item: this.props.fix._id
     })

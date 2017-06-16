@@ -21,7 +21,7 @@ class Home extends React.Component{
     //initialize pictures
     if( this.props.fixation.fixes.length === 0){
       console.log('init')
-      axios.get('http://localhost:8080/initialize')
+      axios.get('/initialize')
         .then( result =>{
           console.log('initializing data', result.data)
           this.props.actions.addItem(result.data.items)

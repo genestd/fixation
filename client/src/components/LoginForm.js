@@ -46,7 +46,7 @@ class LoginForm extends React.Component{
           $('#login-modal').foundation('close')
 
           //send twitter token to server for session validation
-          axios.post('http://localhost:8080/auth', {socialToken: auth.authResponse.oauth_token, socialSecret: auth.authResponse.oauth_token_secret})
+          axios.post('/auth', {socialToken: auth.authResponse.oauth_token, socialSecret: auth.authResponse.oauth_token_secret})
             .then( result=>{
               console.log('server auth result', result)
               if(result.data.success){

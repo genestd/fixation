@@ -35,13 +35,13 @@ class Profile extends React.Component{
     hello.logout('twitter', ()=>{
       this.props.history.push('/')
       this.props.actions.logout()
-      axios.post('http://localhost:8080/logout')
+      axios.post('/logout')
     })
   }
 
   getAdds = () =>{
     return new Promise( (resolve, reject)=>{
-      axios.post('http://localhost:8080/myadds', {user: this.props.fixation.user.screen_name})
+      axios.post('/myadds', {user: this.props.fixation.user.screen_name})
       .then( result=>{
         resolve(result.data)
       })
@@ -52,7 +52,7 @@ class Profile extends React.Component{
   }
   getLikes = () => {
     return new Promise( (resolve, reject)=>{
-      axios.post('http://localhost:8080/mylikes', {user: this.props.fixation.user.screen_name})
+      axios.post('/mylikes', {user: this.props.fixation.user.screen_name})
       .then( result=>{
         console.log(result.data)
         resolve(result.data)

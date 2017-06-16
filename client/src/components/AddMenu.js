@@ -30,7 +30,7 @@ class AddMenu extends React.Component {
     var title = $('#title').val()
     var description = $('#description').val()
 
-    axios.post("http://localhost:8080/addFixItem", {
+    axios.post("/addFixItem", {
       title: title,
       text: description,
       img: $('#new-image').attr('src'),
