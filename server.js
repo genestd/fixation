@@ -4,16 +4,18 @@ require('dotenv').config()
 // init project
 var express = require('express');
 var app = express();
+var favicon = require('express-favicon');
+app.use(favicon( __dirname + '/server/views/img/simon_static.png'));// include auth & session code
 
-// include auth & session code
 var session = require('express-session')
 var passport = require('passport')
 require('./server/auth/passport.js')(passport)
+
 app.use(session({
-  secret: "bookclub",
+  secret: process.env.JWT_KEY,
   resave: false,
-  saveUninitialized: true,
-  cookie: {maxAge: 1000 * 60 * 60 * 24 * 14}  /* Two week cookie */
+  saveUninitialized: false,
+  cookie: {maxAge: 1000 * 60 * 60 * 24 * 14, secure: false}  /* Two week cookie */
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -25,11 +27,7 @@ mongoose.connect('mongodb://' + process.env.MONGO_USER + ":" + process.env.MONGO
 // middleware
 var bodyParser = require('body-parser')
 app.use(bodyParser.json())
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+
 var routes = require('./server/routes')
 routes(app, passport)
 app.use(express.static('server/views'));

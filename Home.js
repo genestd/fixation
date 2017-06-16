@@ -20,7 +20,6 @@ class Home extends React.Component{
     $(document).foundation()
     //initialize pictures
     if( this.props.fixation.fixes.length === 0){
-      console.log('init')
       axios.get('http://localhost:8080/initialize')
         .then( result =>{
           console.log('initializing data', result.data)
@@ -36,9 +35,8 @@ class Home extends React.Component{
 
   componentDidUpdate(){
     //check for current login status
-    if( !this.props.fixation.loginPending ){
-      this.validateLogin()
-    }
+    this.validateLogin()
+
   }
 
   showControlsMenu = () => {
@@ -50,16 +48,61 @@ class Home extends React.Component{
     $('#controlsMenu').toggleClass("card-overlay-hidden")
   }
 
-  validateLogin(){
-    if( !this.props.fixation.clientLoggedIn){
-      $('#login-modal').foundation('open')
-    } else {
+  /*validateLogin(){
+    var twit = hello('twitter').getAuthResponse();
+    if( checkLoginStatus(twit) ){
       $('#login-modal').foundation('close')
+      if(!this.props.fixation.clientLoggedIn){
+        this.props.actions.login('twitter')
+      }
+      if(this.props.fixation.user.username===''){
+        hello('twitter').api('me')
+          .then( result=>{
+
+            this.props.actions.updateUser({
+              username: result.name,
+              screen_name: result.screen_name,
+              image: result.profile_image_url_https
+            })
+          })
+      }
+    } else {
+      $('#login-modal').foundation('open')
     }
+  }*/
+  validateLogin(){
+    console.log(this.props.fixation)
+    if( !this.props.fixation.clientLoggedIn){
+      //$('#login-modal').foundation('open')
+    }/* else {
+      $('#login-modal').foundation('close')
+      if( !this.props.fixation.serverLoggedIn){
+        axios.post('http://localhost:8080/auth', {socialToken: auth.authResponse.oauth_token, socialSecret: auth.authResponse.oauth_token_secret})
+          .then( result=>{
+            console.log('server auth result', result)
+            if(result.success){
+              this.props.actions.serverLogin()
+              this.props.actions.updateUser(result.data.user)
+            }
+          })
+          .catch( error=>{
+            console.log(error)
+          })
+      }
+    }*/
+  }
+
+  secure = () =>{
+    axios.get('http://localhost:8080/secure?jwt=',{withCredentials:true})
+      .then(response=>{
+        console.log('response', response)
+      })
+      .catch(error=>{
+        console.log('error', error)
+      })
   }
 
   render(){
-    console.log('home', this.props)
     return(
       <div>
         <Masonry
@@ -78,9 +121,10 @@ class Home extends React.Component{
         </Masonry>
         <Controls showControlsMenu={this.showControlsMenu} showAddForm={this.showAddForm}/>
         <div>
-          <LoginForm router={this.context.router}/>
+          <LoginForm router={this.context.router} />
         </div>
         <AddMenu />
+        <button className="button primary" onClick={this.secure}>Secure</button>
       </div>
     )
   }

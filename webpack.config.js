@@ -18,7 +18,7 @@ module.exports={
     './client/src/index.js'
   ],
   output: {
-    path: __dirname + '/client/dist',
+    path: __dirname + '/server/views/js',
     //publicPath: './dist',
     filename: "index_bundle.js"
   },

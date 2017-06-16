@@ -3,6 +3,11 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as Actions from '../store/actions'
 import {Route} from 'react-router-dom'
+import Controls from '../components/Controls'
+import AddMenu from '../components/AddMenu'
+import FixCard from '../components/FixCard'
+import Masonry from 'react-masonry-component'
+import axios from 'axios'
 
 class Profile extends React.Component{
 
@@ -14,22 +19,110 @@ class Profile extends React.Component{
     $(document).foundation()
   }
 
-  showAddMenu = () => {
-    $('#addMenu').toggleClass("card-overlay-hidden")
+  showControlsMenu = () => {
+    $('#controlsMenu').toggleClass("card-overlay-hidden")
   }
+
+  showAddForm = () => {
+    $('#add-modal').foundation('open')
+  }
+
   showLogoutMenu = () => {
     $('#logout-menu').toggleClass("card-overlay-hidden")
   }
 
   logout = () => {
     hello.logout('twitter', ()=>{
-      this.props.actions.logout()
       this.props.history.push('/')
+      this.props.actions.logout()
+      axios.post('http://localhost:8080/logout')
     })
   }
 
-  render(){
+  getAdds = () =>{
+    return new Promise( (resolve, reject)=>{
+      axios.post('http://localhost:8080/myadds', {user: this.props.fixation.user.screen_name})
+      .then( result=>{
+        resolve(result.data)
+      })
+      .catch( error=>{
+        reject(error)
+      })
+    })
+  }
+  getLikes = () => {
+    return new Promise( (resolve, reject)=>{
+      axios.post('http://localhost:8080/mylikes', {user: this.props.fixation.user.screen_name})
+      .then( result=>{
+        console.log(result.data)
+        resolve(result.data)
+      })
+      .catch( error=>{
+        reject(error)
+      })
+    })
+  }
 
+  showItems = () =>{
+    switch( this.props.fixation.filter){
+      case 'all':
+        return this.props.fixation.myItems.map( item=>{
+              return (
+                <div key={item._id} className="column fix-card">
+                  <FixCard fix={item} />
+                </div> )
+              })
+      break
+      case 'add':
+      return this.props.fixation.myItems.filter(
+        item =>{
+          return (item.user === this.props.fixation.user.screen_name)
+        })
+        .map( item=>{
+            return (
+              <div key={item._id} className="column fix-card">
+                <FixCard fix={item} />
+              </div> )
+          })
+      break
+      case 'like':
+      return this.props.fixation.myItems.filter(
+        item =>{
+          return this.props.fixation.user.likedItems.indexOf(item._id) > -1
+          })
+        .map( item=>{
+            return (
+              <div key={item._id} className="column fix-card">
+                <FixCard fix={item} />
+              </div> )
+            })
+      break;
+    }
+  }
+
+  componentDidMount(){
+    Promise.all([this.getAdds(), this.getLikes()])
+      .then( results=>{
+        var filtered = results[1].filter(function (item) {
+          console.log(item._id)
+          for(var i=0; i<results[0].length; i++){
+            console.log(results[0][i]._id)
+            if(results[0][i]._id === item._id ){
+              console.log('false')
+              return false
+            }
+          }
+          return true
+        })
+        console.log(filtered)
+        var joined = results[0].concat(filtered);
+        console.log(joined)
+        this.props.actions.updateMyItems(joined)
+      })
+  }
+
+  render(){
+    console.log('profile', this.props)
     return(
       <Route path='/profile'>
         <div className="profile">
@@ -46,37 +139,33 @@ class Profile extends React.Component{
             </div>
           </div>
           <div className="row">
-            <div className="columns small-6">
-              <h3 className="profile-text">{this.props.fixation.user.screen_name}</h3>
+            <div className="columns small-9">
+              <h3 className="filte-text">{this.props.fixation.user.screen_name}</h3>
             </div>
             <div className="columns small-3">
-            </div>
-            <div className="columns small-6 medium-3">
               <img className="profile-image" src={this.props.fixation.user.image}/>
             </div>
           </div>
-          <div className="controls clearfix">
-            <div className="arrow-box card-overlay-hidden" id="addMenu">
-              <div className="vertical-center">
-                <div className="logo float-left">F</div>
-                <div className="menutext text-left">Get our browser button to save ideas even faster</div>
-              </div>
-
-              <div className="vertical-center">
-                <i className="icon-up font-large"></i>
-                <div className="menutext">Upload a Fix</div>
-              </div>
-
-              <div className="vertical-center">
-                <i className="icon-globe font-large"></i>
-                <div className="menutext">Save from website</div>
-              </div>
-            </div>
-            <div className="icons">
-              <i className="icon-plus round"  onClick={()=>this.showAddMenu()}></i>
-              <i className="icon-help round"></i>
+          <div className="row">
+            <div className="columns small-12">
+              <h2 className="subheader">Your fixations</h2>
+              <h6 className="filter-text" onClick={()=>this.props.actions.setFilter('add')}>Added by you</h6>
+              <h6 className="filter-text" onClick={()=>this.props.actions.setFilter('like')}>Liked by you</h6>
+              <h6 className="filter-text" onClick={()=>this.props.actions.setFilter('all')}>All</h6>
             </div>
           </div>
+          <div className="row">
+            <div className="columns small-10 medium-up-9">
+              <Masonry className={"row cardholder small-up-2 medium-up-3 large-up-4"}
+                        elementType={'div'}
+                        disableImagesLoaded={false}
+                        updateOnEachImageLoad={true}>
+                {this.showItems()}
+              </Masonry>
+            </div>
+          </div>
+          <Controls showControlsMenu={this.showControlsMenu} showAddForm={this.showAddForm}/>
+          <AddMenu />
         </div>
       </Route>
     )
