@@ -54,9 +54,9 @@ function fixation(state=INITIAL_STATE, action){
       break
     case ADD_LIKE:
       for(var i=0; i<state.fixes.length;i++){
-        if(state.fixes[i]._id === action.payload){
+        if(state.fixes[i]._id === action.payload[0]){
           console.log(state, state.fixes[i])
-          return update(state, {fixes: {[i]: {likedItems: {$apply: function(x){console.log(x);return ++x}}}},
+          return update(state, {fixes: {[i]: {likes: {$apply: function(x){console.log(x);return ++x}}}},
                                               user: {likedItems: {$push: action.payload}}
                                              })
         }

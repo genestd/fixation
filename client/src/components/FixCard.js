@@ -39,7 +39,7 @@ class FixCard extends React.Component{
         window.setTimeout( ()=>{
           $('#like-'+this.props.fix._id).removeClass('flash')
         },1500)
-        this.props.actions.addLike(this.props.fix._id)
+        this.props.actions.addLike([this.props.fix._id])
       } else {
         console.log('error!', result.data.message)
       }
