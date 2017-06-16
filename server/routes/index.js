@@ -102,49 +102,69 @@ module.exports = function(app, passport){
   })
 
   app.post('/auth', function(req,res){
-    req.session.twitterToken = req.body.socialToken
-    req.session.twitterTokenSecret = req.body.socialSecret
-    //check if this token is authenticated on twitter.
-    var headerOptions = buildTwitterAuthHeader(req)
-    request(headerOptions, function(rq,rs){
-      if( rs.statusCode === 200){
-        var profile = JSON.parse(rs.body)
-        var access_token = jwt.sign(profile, process.env.JWT_KEY,
-                    { expiresIn: '1m',
-                      issuer: 'FIXATION'
-                    })
-        req.session.access_token = access_token
-        FixationUser.findOne({'twitter.id': profile.id}, function(err, user){
-          if(err){ console.log(err); res.send({success: false})}
-          if(user){
-            console.log('found twitter user')
-            res.send({success: true, user: {
-              username: user.twitter.screen_name,
-              screen_name: user.screen_name,
-              image: user.twitter.thumbnail,
-              likedItems: user.likedItems
-            }})
-          } else {
-            console.log('adding twitter user')
-            var newUser = new FixationUser()
-              newUser.screen_name = profile.name
-              newUser.twitter.id = profile.id
-              newUser.twitter.username = profile.name
-              newUser.twitter.screen_name = profile.screen_name
-              newUser.twitter.thumbnail = profile.profile_image_url_https
-              newUser.save(function(err, user){
-                if(err){ console.log(err)}
-                res.send({success: true, user: {
-                  username: user.twitter.screen_name,
-                  screen_name: user.screen_name,
-                  image: user.twitter.thumbnail,
-                  likedItems: []
-                }})
-              })
-          }
-        })
-       }
-    })
+    if(req.body.loginMethod === 'twitter'){
+      req.session.twitterToken = req.body.socialToken
+      req.session.twitterTokenSecret = req.body.socialSecret
+      //check if this token is authenticated on twitter.
+      var headerOptions = buildTwitterAuthHeader(req)
+      request(headerOptions, function(rq,rs){
+        if( rs.statusCode === 200){
+          var profile = JSON.parse(rs.body)
+          var access_token = jwt.sign(profile, process.env.JWT_KEY,
+                      { expiresIn: '1m',
+                        issuer: 'FIXATION'
+                      })
+          req.session.access_token = access_token
+          FixationUser.findOne({'twitter.id': profile.id}, function(err, user){
+            if(err){ console.log(err); res.send({success: false})}
+            if(user){
+              console.log('found twitter user')
+              res.send({success: true, user: {
+                username: user.twitter.screen_name,
+                screen_name: user.screen_name,
+                image: user.twitter.thumbnail,
+                likedItems: user.likedItems
+              }})
+            } else {
+              console.log('adding twitter user')
+              var newUser = new FixationUser()
+                newUser.screen_name = profile.name
+                newUser.twitter.id = profile.id
+                newUser.twitter.username = profile.name
+                newUser.twitter.screen_name = profile.screen_name
+                newUser.twitter.thumbnail = profile.profile_image_url_https
+                newUser.save(function(err, user){
+                  if(err){ console.log(err)}
+                  res.send({success: true, user: {
+                    username: user.twitter.screen_name,
+                    screen_name: user.screen_name,
+                    image: user.twitter.thumbnail,
+                    likedItems: []
+                  }})
+                })
+            }
+          })
+         }
+      })
+    } else {
+
+    }
+  })
+
+  app.route('/locallogin')
+  .post( function(req, res, next){
+    passport.authenticate('local-login', function(err, user, info){
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.json({success:false, reason:info.code, msg: info.msg});
+      }
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return res.json({success: true, user: req.session.passport.user});
+      });
+    })(req, res, next);
   })
 
   function verifyJwt(jwtString) {
@@ -155,7 +175,9 @@ module.exports = function(app, passport){
 
   function isAuthenticated(req, res, next){
     //authenticated via passport local login
-    if( req.session.user && req.session.user.authenticated ){
+    console.log(req.user, req.passport, req.session)
+    if( req.user ){
+      console.log('local user authenticated')
       return next()
     } else {
       //check for JWT created after social login

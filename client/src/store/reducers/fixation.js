@@ -1,5 +1,5 @@
 import {LOGIN, SERVER_LOGIN, LOGOUT, UPDATE_USER, SET_CANDIDATE, ADD_ITEM, ADD_LIKE,
-        LOGIN_PENDING, UPDATE_MY_ITEMS, SET_FILTER, REFRESH_ITEMS}
+        LOGIN_PENDING, UPDATE_MY_ITEMS, SET_FILTER, REFRESH_ITEMS, DELETE_ITEM}
   from '../actions'
 import update from 'immutability-helper';
 import axios from 'axios'
@@ -70,6 +70,18 @@ function fixation(state=INITIAL_STATE, action){
     case REFRESH_ITEMS:
       return update(state, {fixes: {$set: action.payload}})
       break
+    case DELETE_ITEM:
+      var item_to_delete = -1
+      for( var i=0; i<state.myItems.length; i++){
+        if(state.myItems[i]._id === action.payload){
+          item_to_delete = i
+        }
+      }
+      if( item_to_delete>=0){
+        return update(state, {myItems: {$splice: [[item_to_delete, 1]]}})
+      } else {
+        return state
+      }
     default:
       return state
   }

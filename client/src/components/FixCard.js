@@ -22,6 +22,7 @@ class FixCard extends React.Component{
   delete = () =>{
     axios.post('/delete', {item: this.props.fix._id})
     .then( result=>{
+      this.props.actions.deleteItem(this.props.fix._id)
       this.props.actions.refreshItems(result.data.items)
     })
   }

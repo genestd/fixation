@@ -312,6 +312,14 @@ hr{
   width: 100%;
   background-color: #bd081c;
 }
+
+.button-red:focus,
+.button-red:hover{
+  border-radius: 4px;
+  font-weight: bold;
+  width: 100%;
+  background-color: #bd081c;
+}
 .terms{
   font-size: 11px;
   color: #aaa;
@@ -319,6 +327,16 @@ hr{
 .terms a{
   color: #888;
   font-weight: bold;
+}
+.login-input, .login-input:focus{
+  border: none;
+  background-color: rgb(239,239,239);
+  border-radius: 4px;
+  color: rgb(80,80,80);
+  font-weight: bold;
+}
+.input-hidden{
+  opacity: 0;
 }
 /**************************
 * PROFILE

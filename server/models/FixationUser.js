@@ -8,6 +8,7 @@ var FixationUser = new Schema({
   password: String,
   screen_name: {type: String,
                 unique: true},
+  avatar: String,
   twitter: {
     id: String,
     token: Object,
@@ -27,5 +28,14 @@ FixationUser.methods.addLike = function(item, cb){
   this.likedItems.push(item)
   this.save(cb)
 }
+
+FixationUser.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+// checking if password is valid
+FixationUser.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+};
 
 module.exports = mongoose.model('FixationUser', FixationUser)

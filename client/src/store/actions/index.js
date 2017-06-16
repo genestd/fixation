@@ -8,6 +8,7 @@ export const UPDATE_USER = 'UPDATE_USER'
 export const SET_CANDIDATE = 'SET_CANDIDATE'
 export const ADD_ITEM = 'ADD_ITEM'
 export const ADD_LIKE = 'ADD_LIKE'
+export const DELETE_ITEM = 'DELETE_ITEM'
 export const UPDATE_MY_ITEMS = 'UPDATE_MY_ITEMS'
 export const SET_FILTER = 'SET_FILTER'
 export const REFRESH_ITEMS = 'REFRESH_ITEMS'
@@ -90,5 +91,12 @@ export function refreshItems(items){
   return({
     type: REFRESH_ITEMS,
     payload: items
+  })
+}
+
+export function deleteItem(item){
+  return({
+    type: DELETE_ITEM,
+    payload: item
   })
 }
