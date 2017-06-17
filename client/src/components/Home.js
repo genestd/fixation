@@ -7,7 +7,6 @@ import Masonry from 'react-masonry-component'
 import FixCard from '../components/FixCard'
 import LoginForm from '../components/LoginForm'
 import Controls from '../components/Controls'
-import AddMenu from '../components/AddMenu'
 
 class Home extends React.Component{
 
@@ -20,10 +19,8 @@ class Home extends React.Component{
     $(document).foundation()
     //initialize pictures
     if( this.props.fixation.fixes.length === 0){
-      console.log('init')
       axios.get('/initialize')
         .then( result =>{
-          console.log('initializing data', result.data)
           this.props.actions.addItem(result.data.items)
         })
         .catch( error=>{
@@ -41,15 +38,6 @@ class Home extends React.Component{
     }
   }
 
-  showControlsMenu = () => {
-    $('#controlsMenu').toggleClass("card-overlay-hidden")
-  }
-
-  showAddForm = () => {
-    $('#add-modal').foundation('open')
-    $('#controlsMenu').toggleClass("card-overlay-hidden")
-  }
-
   validateLogin(){
     if( !this.props.fixation.clientLoggedIn){
       $('#login-modal').foundation('open')
@@ -59,7 +47,6 @@ class Home extends React.Component{
   }
 
   render(){
-    console.log('home', this.props)
     return(
       <div>
         <Masonry
@@ -80,7 +67,6 @@ class Home extends React.Component{
         <div>
           <LoginForm router={this.context.router}/>
         </div>
-        <AddMenu />
       </div>
     )
   }

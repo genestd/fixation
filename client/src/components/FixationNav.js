@@ -11,7 +11,7 @@ class FixationNav extends React.Component{
 
     return(
       <div data-sticky-container>
-        <nav className="top-bar row" data-sticky data-top-anchor="fixApp:top" data-sticky-on="small" data-margin-top="0" id="fixnav">
+        <nav className="top-bar row" data-sticky data-sticky-on="small" data-margin-top="0" id="fixnav" data-options="anchor:'stickyAnchor';stickTo:top">
           <div className="columns small-2 medium-1">
             <Link to="/"><div className="logo">F</div></Link>
           </div>

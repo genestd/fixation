@@ -526,12 +526,19 @@ hr{
     1% { color:#bd081c;}
     100% {color: rgb(180,180,180);}
 }
-@media (max-width: 630px){
+@media (max-width: 640px){
   .controls{
     max-width: 55%;
   }
   .reveal{
     width: 75%;
+    left: 12.5%
   }
 
+}
+@media screen and (max-width: 39.9375em){
+  .add-modal, .reveal{
+    height: auto;
+    min-height: 0;
+  }
 }

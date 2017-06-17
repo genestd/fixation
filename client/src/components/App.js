@@ -8,6 +8,7 @@ const App = (props) => {
   return (
     <Router>
       <div id="fixApp">
+        <div id="stickyAnchor"></div>
         <FixationNav />
         <Switch>
           <Route path="/" exact component={Home}/>

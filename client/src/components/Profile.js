@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 import * as Actions from '../store/actions'
 import {Route} from 'react-router-dom'
 import Controls from '../components/Controls'
-import AddMenu from '../components/AddMenu'
 import FixCard from '../components/FixCard'
 import Masonry from 'react-masonry-component'
 import axios from 'axios'
@@ -165,7 +164,6 @@ class Profile extends React.Component{
             </div>
           </div>
           <Controls showControlsMenu={this.showControlsMenu} showAddForm={this.showAddForm}/>
-          <AddMenu />
         </div>
       </Route>
     )
