@@ -18,8 +18,8 @@ class LoginForm extends React.Component{
   }
 
   componentDidMount=()=>{
-    var lm1 = new Foundation.Reveal($('#login-modal'),{closeOnClick:false, closeOnEsc:false, resetOnClose: true})
-    var lm2 = new Foundation.Reveal($('#login-modal-step2'),{closeOnClick:false, closeOnEsc:false, resetOnClose: true})
+    var lm1 = new Foundation.Reveal($('#login-modal'),{closeOnClick:false, closeOnEsc:false})
+    var lm2 = new Foundation.Reveal($('#login-modal-step2'),{closeOnClick:false, closeOnEsc:false})
     //$(document).foundation()
     this.setState({
       loginModal1: lm1,
@@ -132,6 +132,7 @@ class LoginForm extends React.Component{
           user: result.data.user
         }
 
+        console.log('about to clear inputs')
         this.props.actions.login(mutations)
         username = $('#email').val('')
         password = $('#password').val('')
@@ -145,8 +146,10 @@ class LoginForm extends React.Component{
           //bad password
           //show bad password message
           msg = 'Incorrect Password'
+          console.log(msg)
         } else {
           msg = 'Unknown Error - please refresh the page and try again'
+          console.log(result, msg)
         }
       }
     })
@@ -203,7 +206,7 @@ class LoginForm extends React.Component{
           <p className="text-heavy text-center">Welcome to Fixation</p>
           <div className="login-form-centered" >
 
-            <div id="login-form">
+            <div id="login-form-step2">
               <div className="row">
                 <div className="small-9 columns small-centered">
                   <input className="input-hidden" type="text" placeholder="Screen Name" disabled />

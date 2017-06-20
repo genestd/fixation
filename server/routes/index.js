@@ -161,7 +161,7 @@ module.exports = function(app, passport){
         return res.json({success:false, reason:info.code, msg: info.msg});
       }
       req.logIn(user, function(err) {
-        if (err) { return next(err); }
+        if (err) { console.log(err); return next(err); }
         return res.json({success: true, user: req.session.passport.user});
       });
     })(req, res, next);
@@ -175,6 +175,7 @@ module.exports = function(app, passport){
 
   function isAuthenticated(req, res, next){
     //authenticated via passport local login
+    console.log(req.session)
     if( req.user ){
       console.log('local user authenticated')
       return next()

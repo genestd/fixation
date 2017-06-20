@@ -8,7 +8,7 @@ var FixationUser = new Schema({
   password: String,
   screen_name: {type: String,
                 unique: true},
-  avatar: String,
+  image: String,
   twitter: {
     id: String,
     token: Object,

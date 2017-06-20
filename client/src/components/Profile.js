@@ -101,6 +101,7 @@ class Profile extends React.Component{
   componentDidMount(){
     Promise.all([this.getAdds(), this.getLikes()])
       .then( results=>{
+        console.log('results: ', results)
         var filtered = results[1].filter(function (item) {
           for(var i=0; i<results[0].length; i++){
             if(results[0][i]._id === item._id ){

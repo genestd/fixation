@@ -29,10 +29,10 @@ module.exports = function(passport){
     console.log(username, password, req.body)
     FixationUser.findOne({ 'username' :  username }, function(err, user) {
       // if there are any errors, return the error
-      if (err)
-          return done(err);
+      if (err){ return done(err); }
 
       // check to see if theres already a user with that email
+      console.log(user)
       if (user) {
         if( !user.validPassword(password)){
           return done(null, false, {success: false, code:2, msg: 'Invalid password!'})
@@ -50,19 +50,19 @@ module.exports = function(passport){
             newUser.username = username;
             newUser.password = newUser.generateHash(password);
             newUser.screen_name = req.body.screen_name;
-            newUser.avatar = ''
+            newUser.image = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png'
             // save the user
             newUser.save(function(err,user) {
                 if (err)
                     throw err;
                 return done(null, {
+                  _id: user._id,
                   username: user.username,
                   screen_name: user.screen_name,
-                  image: user.avatar,
+                  image: user.image,
                   likedItems: []
                 });
             });
-            return done(null, newUser)
           } else {
             return done(null, false, {success: false, code:1, msg: 'No user with that username'})
           }
