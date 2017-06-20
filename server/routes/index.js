@@ -21,7 +21,7 @@ module.exports = function(app, passport){
   app.post('/logout', function(req,res){
     req.logout()
     req.session.destroy(function (err) {
-        res.redirect('/ '); //Inside a callback… bulletproof!
+        res.redirect('/'); //Inside a callback… bulletproof!
     })
   })
 
@@ -175,7 +175,6 @@ module.exports = function(app, passport){
 
   function isAuthenticated(req, res, next){
     //authenticated via passport local login
-    console.log(req.user, req.passport, req.session)
     if( req.user ){
       console.log('local user authenticated')
       return next()

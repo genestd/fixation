@@ -14,7 +14,7 @@ class Controls extends React.Component {
   }
 
   componentDidMount(){
-    $(document).foundation()
+    //$(document).foundation()
     var m1 = new Foundation.Reveal($('#add-modal'),{dataMultipleOpened: true})
     var m2 = new Foundation.Reveal($('#add-modal-step2'),{dataMultipleOpened: true})
     this.setState({
@@ -24,13 +24,20 @@ class Controls extends React.Component {
 
   }
 
+  componentWillUnmount = () => {
+    console.log('trying to destroy modals')
+    this.state.addModal1.destroy()
+    this.state.addModal2.destroy()
+    $('#add-modal').remove()
+    $('#add-modal-step2').remove()
+  }
+
   componentDidUpdate(){
-    Foundation.reInit($('#add-modal'))
-    Foundation.reInit($('#add-modal-step2'))
+    //Foundation.reInit($('#add-modal'))
+    //Foundation.reInit($('#add-modal-step2'))
   }
 
   selectImage = () => {
-    console.log('hi')
     var candidate = $('#image-url')[0].value;
     this.props.actions.setCandidate(candidate)
     this.state.addModal2.open()
@@ -80,7 +87,8 @@ class Controls extends React.Component {
   }
 
   closeAllModals = () => {
-    $('[data-reveal]').foundation('close')
+    this.state.addModal1.close()
+    this.state.addModal2.close()
   }
 
   render(){

@@ -7,7 +7,7 @@ hello.init({
 
 
 function checkLoginStatus(session){
-	console.log(session)
 	var currentTime = (new Date()).getTime() / 1000;
+	//console.log(session, currentTime)
 	return session && session.access_token && session.expires > currentTime;
 };

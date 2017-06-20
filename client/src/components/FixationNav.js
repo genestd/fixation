@@ -5,13 +5,32 @@ class FixationNav extends React.Component{
 
   constructor(props){
     super(props)
+    this.state={
+      nav: {}
+    }
   }
 
+  componentDidMount = () =>{
+    //data-sticky="" id="fixnav" data-top-anchor="topAnchor:bottom" data-btm-anchor="bottomAnchor" data-sticky-on="small" data-margin-top="0" data-check-every="50"
+    var nav = new Foundation.Sticky( $('#fixnav'),{topAnchor: 'topAnchor:bottom',
+                                                   btmAnchor: 'bottomAnchor',
+                                                   stickyOn: 'small',
+                                                   marginTop: 0,
+                                                   checkEvery: 50})
+    this.setState({
+      nav: nav
+    })
+  }
+
+  componentWillUnmount = () => {
+    this.state.nav.destroy()
+  }
   render(){
 
     return(
       <div data-sticky-container>
-        <nav className="top-bar row" data-sticky data-sticky-on="small" data-margin-top="0" id="fixnav" data-options="anchor:'stickyAnchor';stickTo:top">
+
+        <nav className="top-bar row" id="fixnav">
           <div className="columns small-2 medium-1">
             <Link to="/"><div className="logo">F</div></Link>
           </div>

@@ -10,20 +10,57 @@ class LoginForm extends React.Component{
 
   constructor(props){
     super(props)
+    this.state={
+      loginModal1: {},
+      loginModal2: {}
+    }
+    console.log('constructor', this.props)
   }
 
-  componentDidMount(){
-    $(document).foundation()
+  componentDidMount=()=>{
+    var lm1 = new Foundation.Reveal($('#login-modal'),{closeOnClick:false, closeOnEsc:false, resetOnClose: true})
+    var lm2 = new Foundation.Reveal($('#login-modal-step2'),{closeOnClick:false, closeOnEsc:false, resetOnClose: true})
+    //$(document).foundation()
+    this.setState({
+      loginModal1: lm1,
+      loginModal2: lm2
+    })
+    window.setTimeout( ()=>{
+      this.validateLogin()
+    },250)
+
   }
 
-  componentDidUpdate(){
+  componentDidUpdate =() =>{
+    //Foundation.reInit($('#login-modal'))
+    //Foundation.reInit($('#login-modal-step2'))
+    //check for current login status
+    console.log(this.state.loginModal1)
+    if( !this.props.fixation.loginPending ){
+      this.validateLogin()
+    }
+  }
 
+  componentWillUnmount = () => {
+    console.log('trying to destroy modals')
+    this.state.loginModal1.destroy()
+    this.state.loginModal2.destroy()
+    $('#login-modal').remove()
+    $('#login-modal-step2').remove()
+  }
+  validateLogin =() =>{
+    if( !this.props.fixation.clientLoggedIn){
+      console.log('opening...')
+      this.state.loginModal1.open()
+    } else {
+      console.log('closing...')
+      this.state.loginModal1.close()
+    }
   }
 
   twitterClick = () => {
     this.twitterLogin()
       .then( result=>{
-        console.log(result)
         this.props.actions.login(result.mutations)
       })
       .catch( error=>{
@@ -33,17 +70,20 @@ class LoginForm extends React.Component{
 
   twitterLogin = () => {
     this.props.actions.loginPending()
-    return new Promise( function(resolve, reject){
+    return new Promise( (resolve, reject)=>{
+      console.log('in promise', this.state)
       let mutations = {
         loginMethod: 'twitter'
       }
 
       hello.login('twitter', auth=>{
+        console.log('hello login callback', this.state)
         if( checkLoginStatus(auth.authResponse) ){
+          console.log('got here')
           mutations.clientLoggedIn = true
           mutations.loginPending = false
 
-          $('#login-modal').foundation('close')
+          this.state.loginModal1.close()
 
           //send twitter token to server for session validation
           axios.post('/auth', {socialToken: auth.authResponse.oauth_token, socialSecret: auth.authResponse.oauth_token_secret, loginMethod: 'twitter'})
@@ -70,6 +110,7 @@ class LoginForm extends React.Component{
 
   handleLocalLogin = (e) => {
     e.preventDefault()
+    this.props.actions.loginPending()
     //try to login user...
     var username = $('#email').val()
     var password = $('#password').val()
@@ -82,18 +123,24 @@ class LoginForm extends React.Component{
       var msg = ''
       if( result.data.success ){
 
-        $('[data-reveal]').foundation('close')
+        this.state.loginModal1.close()
+        this.state.loginModal2.close()
         var mutations= {
+          loginPending: false,
           loginMethod: 'local',
           clientLoggedIn: true,
           user: result.data.user
         }
 
         this.props.actions.login(mutations)
+        username = $('#email').val('')
+        password = $('#password').val('')
+        screen_name = $('#screen_name').val('')
+
       } else {
         if( result.data.reason === 1){
           //user not found, show sign up option
-          $("#login-modal-step2").foundation('open')
+          this.state.loginModal2.open()
         } else if( result.data.reason === 2 ){
           //bad password
           //show bad password message
@@ -109,9 +156,10 @@ class LoginForm extends React.Component{
   }
 
   render(){
+    console.log('logform',this.props)
     return(
       <div>
-        <div className="reveal" id="login-modal" data-reveal="" data-options="closeOnClick:false;closeOnEsc:false;">
+        <div className="reveal" id="login-modal">
           <h1 className="logo supersize">F</h1>
           <p className="text-heavy text-center">Welcome to Fixation</p>
           <div className="login-form-centered" >
@@ -150,7 +198,7 @@ class LoginForm extends React.Component{
               </div>
           </div>
         </div>
-        <div className="reveal" id="login-modal-step2" data-reveal="" data-options="closeOnClick:false;closeOnEsc:false;">
+        <div className="reveal" id="login-modal-step2">
           <h1 className="logo supersize">F</h1>
           <p className="text-heavy text-center">Welcome to Fixation</p>
           <div className="login-form-centered" >

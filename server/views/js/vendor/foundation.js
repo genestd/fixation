@@ -2128,7 +2128,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       /**
-       * Goes through a form to find inputs and proceeds to validate them in ways specific to their type. 
+       * Goes through a form to find inputs and proceeds to validate them in ways specific to their type.
        * Ignores inputs with data-abide-ignore, type="hidden" or disabled attributes set
        * @fires Abide#invalid
        * @fires Abide#valid
@@ -8295,6 +8295,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(Sticky, [{
       key: '_init',
       value: function _init() {
+        console.log('foundationtest: ', this.$element)
         var $parent = this.$element.parent('[data-sticky-container]'),
             id = this.$element[0].id || Foundation.GetYoDigits(6, 'sticky'),
             _this = this;

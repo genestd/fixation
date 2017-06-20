@@ -16,7 +16,7 @@ class Home extends React.Component{
 
   componentDidMount(){
     //iniitialize foundation elements
-    $(document).foundation()
+    //$(document).foundation()
     //initialize pictures
     if( this.props.fixation.fixes.length === 0){
       axios.get('/initialize')
@@ -26,23 +26,6 @@ class Home extends React.Component{
         .catch( error=>{
           console.log(error)
         })
-    }
-    //check for current login status
-    this.validateLogin()
-  }
-
-  componentDidUpdate(){
-    //check for current login status
-    if( !this.props.fixation.loginPending ){
-      this.validateLogin()
-    }
-  }
-
-  validateLogin(){
-    if( !this.props.fixation.clientLoggedIn){
-      $('#login-modal').foundation('open')
-    } else {
-      $('#login-modal').foundation('close')
     }
   }
 
@@ -64,7 +47,7 @@ class Home extends React.Component{
           })}
         </Masonry>
         <Controls showControlsMenu={this.showControlsMenu} showAddForm={this.showAddForm}/>
-        <div>
+        <div className='myLoginForm'>
           <LoginForm router={this.context.router}/>
         </div>
       </div>

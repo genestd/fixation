@@ -53,7 +53,7 @@ class FixCard extends React.Component{
   }
 
   componentDidMount(){
-    $(document).foundation()
+    //$(document).foundation()
   }
 
   likeOrDelete = () => {

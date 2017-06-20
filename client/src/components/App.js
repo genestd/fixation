@@ -8,13 +8,14 @@ const App = (props) => {
   return (
     <Router>
       <div id="fixApp">
-        <div id="stickyAnchor"></div>
+        <div id="topAnchor"></div>
         <FixationNav />
         <Switch>
           <Route path="/" exact component={Home}/>
           <Route path="/profile" component={Profile}/>
           <Route path="*" component={NotFound}/>
         </Switch>
+        <div id="bottomAnchor">.</div>
       </div>
     </Router>
   )

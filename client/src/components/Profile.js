@@ -53,7 +53,6 @@ class Profile extends React.Component{
     return new Promise( (resolve, reject)=>{
       axios.post('/mylikes', {user: this.props.fixation.user.screen_name})
       .then( result=>{
-        console.log(result.data)
         resolve(result.data)
       })
       .catch( error=>{
@@ -103,19 +102,14 @@ class Profile extends React.Component{
     Promise.all([this.getAdds(), this.getLikes()])
       .then( results=>{
         var filtered = results[1].filter(function (item) {
-          console.log(item._id)
           for(var i=0; i<results[0].length; i++){
-            console.log(results[0][i]._id)
             if(results[0][i]._id === item._id ){
-              console.log('false')
               return false
             }
           }
           return true
         })
-        console.log(filtered)
         var joined = results[0].concat(filtered);
-        console.log(joined)
         this.props.actions.updateMyItems(joined)
       })
   }
