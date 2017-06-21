@@ -109,6 +109,7 @@ class Profile extends React.Component{
   }
 
   componentDidMount(){
+    window.scrollTo(0, 0)
     Promise.all([this.getAdds(), this.getLikes()])
       .then( results=>{
         console.log('results: ', results)
@@ -164,7 +165,7 @@ class Profile extends React.Component{
             </div>
           </div>
           <div className="row clearfix">
-            { this.props.fixation.searchterm !== "" ? <div className="columns small-10 medium-up-9 card-filter end">Filter: {this.props.fixation.searchterm}<i className="icon-cancel float-right" onClick={this.clearSearch}></i></div> : null }
+            { this.props.fixation.searchterm !== "" ? <div className="columns small-10 medium-up-9 card-filter end">Filter: {this.props.fixation.searchterm}<i className="icon-cancel float-right pointer" onClick={this.clearSearch}></i></div> : null }
             <div className="columns small-10 medium-up-9 end">
               <Masonry className={"row cardholder small-up-2 medium-up-3 large-up-4"}
                         elementType={'div'}

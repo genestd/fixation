@@ -4,6 +4,7 @@
   "description": "starter package for full stack apps",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "node server.js",
     "client": "webpack-dev-server"
   },

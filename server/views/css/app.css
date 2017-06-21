@@ -72,6 +72,10 @@ body{
   margin-left: 0;
   margin-right: 0;
 }
+.icon-cancel:before{
+  color: #777;
+  font-weight: bold;
+}
 /************************************
 * CARD STYLES
 ************************************/

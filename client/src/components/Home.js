@@ -37,7 +37,7 @@ class Home extends React.Component{
   render(){
     return(
       <div>
-        { this.props.fixation.searchterm !== "" ? <div className="card-filter">Filter: {this.props.fixation.searchterm}<i className="icon-cancel float-right" onClick={this.clearSearch}></i></div> : null }
+        { this.props.fixation.searchterm !== "" ? <div className="card-filter">Filter: {this.props.fixation.searchterm}<i className="icon-cancel float-right pointer" onClick={this.clearSearch}></i></div> : null }
         <Masonry
             className={"row cardholder small-up-2 medium-up-3 large-up-4"}
             elementType={'div'}
