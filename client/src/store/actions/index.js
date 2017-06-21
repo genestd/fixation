@@ -12,7 +12,7 @@ export const DELETE_ITEM = 'DELETE_ITEM'
 export const UPDATE_MY_ITEMS = 'UPDATE_MY_ITEMS'
 export const SET_FILTER = 'SET_FILTER'
 export const REFRESH_ITEMS = 'REFRESH_ITEMS'
-
+export const SET_SEARCH = 'SET_SEARCH'
 
 export function login(mutations){
   return({
@@ -98,5 +98,12 @@ export function deleteItem(item){
   return({
     type: DELETE_ITEM,
     payload: item
+  })
+}
+
+export function setSearch(term){
+  return ({
+    type: SET_SEARCH,
+    payload: term
   })
 }

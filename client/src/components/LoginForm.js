@@ -14,7 +14,6 @@ class LoginForm extends React.Component{
       loginModal1: {},
       loginModal2: {}
     }
-    console.log('constructor', this.props)
   }
 
   componentDidMount=()=>{
@@ -32,17 +31,12 @@ class LoginForm extends React.Component{
   }
 
   componentDidUpdate =() =>{
-    //Foundation.reInit($('#login-modal'))
-    //Foundation.reInit($('#login-modal-step2'))
-    //check for current login status
-    console.log(this.state.loginModal1)
     if( !this.props.fixation.loginPending ){
       this.validateLogin()
     }
   }
 
   componentWillUnmount = () => {
-    console.log('trying to destroy modals')
     this.state.loginModal1.destroy()
     this.state.loginModal2.destroy()
     $('#login-modal').remove()
@@ -50,10 +44,8 @@ class LoginForm extends React.Component{
   }
   validateLogin =() =>{
     if( !this.props.fixation.clientLoggedIn){
-      console.log('opening...')
       this.state.loginModal1.open()
     } else {
-      console.log('closing...')
       this.state.loginModal1.close()
     }
   }
@@ -71,15 +63,12 @@ class LoginForm extends React.Component{
   twitterLogin = () => {
     this.props.actions.loginPending()
     return new Promise( (resolve, reject)=>{
-      console.log('in promise', this.state)
       let mutations = {
         loginMethod: 'twitter'
       }
 
       hello.login('twitter', auth=>{
-        console.log('hello login callback', this.state)
         if( checkLoginStatus(auth.authResponse) ){
-          console.log('got here')
           mutations.clientLoggedIn = true
           mutations.loginPending = false
 
@@ -88,7 +77,6 @@ class LoginForm extends React.Component{
           //send twitter token to server for session validation
           axios.post('/auth', {socialToken: auth.authResponse.oauth_token, socialSecret: auth.authResponse.oauth_token_secret, loginMethod: 'twitter'})
             .then( result=>{
-              console.log('server auth result', result)
               if(result.data.success){
                 mutations.serverLoggedIn = true;
                 mutations.user = result.data.user
@@ -116,7 +104,6 @@ class LoginForm extends React.Component{
     var password = $('#password').val()
     var screen_name = $('#screen_name').val()
     var user = {'username': username, 'password': password, 'screen_name': screen_name}
-    console.log(user)
     axios.post('/locallogin', user )
     .then( result=>{
 
@@ -132,7 +119,6 @@ class LoginForm extends React.Component{
           user: result.data.user
         }
 
-        console.log('about to clear inputs')
         this.props.actions.login(mutations)
         username = $('#email').val('')
         password = $('#password').val('')
@@ -146,7 +132,6 @@ class LoginForm extends React.Component{
           //bad password
           //show bad password message
           msg = 'Incorrect Password'
-          console.log(msg)
         } else {
           msg = 'Unknown Error - please refresh the page and try again'
           console.log(result, msg)
@@ -159,7 +144,6 @@ class LoginForm extends React.Component{
   }
 
   render(){
-    console.log('logform',this.props)
     return(
       <div>
         <div className="reveal" id="login-modal">

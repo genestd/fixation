@@ -29,9 +29,15 @@ class Home extends React.Component{
     }
   }
 
+  clearSearch = () => {
+    $('#searchterm').val('')
+    this.props.actions.setSearch('')
+  }
+
   render(){
     return(
       <div>
+        { this.props.fixation.searchterm !== "" ? <div className="card-filter">Filter: {this.props.fixation.searchterm}<i className="icon-cancel float-right" onClick={this.clearSearch}></i></div> : null }
         <Masonry
             className={"row cardholder small-up-2 medium-up-3 large-up-4"}
             elementType={'div'}
@@ -39,11 +45,21 @@ class Home extends React.Component{
             updateOnEachImageLoad={true}>
 
           {this.props.fixation.fixes.map( fix =>{
-            return(
-              <div key={fix._id} className="column fix-card">
-                <FixCard fix={fix} router={this.context.router}/>
-              </div>
-            )
+            if(this.props.fixation.searchterm !== ''){
+              if( fix.title.toUpperCase().includes( this.props.fixation.searchterm.toUpperCase())){
+                return(
+                  <div key={fix._id} className="column fix-card">
+                    <FixCard fix={fix} router={this.context.router}/>
+                  </div>
+                )
+              }
+            } else {
+              return(
+                <div key={fix._id} className="column fix-card">
+                  <FixCard fix={fix} router={this.context.router}/>
+                </div>
+              )
+            }
           })}
         </Masonry>
         <Controls showControlsMenu={this.showControlsMenu} showAddForm={this.showAddForm}/>

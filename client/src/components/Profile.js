@@ -61,20 +61,30 @@ class Profile extends React.Component{
     })
   }
 
+  match( fix, keyword){
+    if(keyword !== ''){
+      return( fix.title.toUpperCase().includes(keyword.toUpperCase()))
+    } else {
+      return true
+    }
+  }
+
   showItems = () =>{
     switch( this.props.fixation.filter){
       case 'all':
         return this.props.fixation.myItems.map( item=>{
+          if( this.match(item, this.props.fixation.searchterm)){
               return (
                 <div key={item._id} className="column fix-card">
                   <FixCard fix={item} />
                 </div> )
-              })
-      break
+          }
+        })
+        break
       case 'add':
       return this.props.fixation.myItems.filter(
         item =>{
-          return (item.user === this.props.fixation.user.screen_name)
+          return (item.user === this.props.fixation.user.screen_name  && this.match(item, this.props.fixation.searchterm))
         })
         .map( item=>{
             return (
@@ -86,7 +96,7 @@ class Profile extends React.Component{
       case 'like':
       return this.props.fixation.myItems.filter(
         item =>{
-          return this.props.fixation.user.likedItems.indexOf(item._id) > -1
+          return (this.props.fixation.user.likedItems.indexOf(item._id) > -1 && this.match(item, this.props.fixation.searchterm))
           })
         .map( item=>{
             return (
@@ -113,6 +123,11 @@ class Profile extends React.Component{
         var joined = results[0].concat(filtered);
         this.props.actions.updateMyItems(joined)
       })
+  }
+
+  clearSearch = () => {
+    $('#searchterm').val('')
+    this.props.actions.setSearch('')
   }
 
   render(){
@@ -148,8 +163,9 @@ class Profile extends React.Component{
               <h6 className="filter-text" onClick={()=>this.props.actions.setFilter('all')}>All</h6>
             </div>
           </div>
-          <div className="row">
-            <div className="columns small-10 medium-up-9">
+          <div className="row clearfix">
+            { this.props.fixation.searchterm !== "" ? <div className="columns small-10 medium-up-9 card-filter end">Filter: {this.props.fixation.searchterm}<i className="icon-cancel float-right" onClick={this.clearSearch}></i></div> : null }
+            <div className="columns small-10 medium-up-9 end">
               <Masonry className={"row cardholder small-up-2 medium-up-3 large-up-4"}
                         elementType={'div'}
                         disableImagesLoaded={false}

@@ -1,5 +1,5 @@
 import {LOGIN, SERVER_LOGIN, LOGOUT, UPDATE_USER, SET_CANDIDATE, ADD_ITEM, ADD_LIKE,
-        LOGIN_PENDING, UPDATE_MY_ITEMS, SET_FILTER, REFRESH_ITEMS, DELETE_ITEM}
+        LOGIN_PENDING, UPDATE_MY_ITEMS, SET_FILTER, REFRESH_ITEMS, DELETE_ITEM, SET_SEARCH}
   from '../actions'
 import update from 'immutability-helper';
 import axios from 'axios'
@@ -23,20 +23,19 @@ const INITIAL_STATE = {
     {_id: 4, img: '/img/simon_static.png', title: "Simon clone", text: 'Pure html/css/javascript version of Simon. Sounds produced through web audio API', user: "testuser", thumbnail: "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"},
   ],*/
   default_url: "https://placehold.it/100x200",
-  candidate_image: ''
+  candidate_image: '',
+  searchterm: ''
 }
 function fixation(state=INITIAL_STATE, action){
 
   switch(action.type){
     case LOGIN:
-      console.log(action)
       return Object.assign({}, state, action.payload)
       break
     case SERVER_LOGIN:
       return Object.assign({}, state, {serverLoggedIn: true})
       break
     case LOGOUT:
-      console.log('logging out')
       return Object.assign({}, state, {clientLoggedIn: false, user:{}, serverLoggedIn: false})
       break
     case LOGIN_PENDING:
@@ -82,6 +81,9 @@ function fixation(state=INITIAL_STATE, action){
       } else {
         return state
       }
+    case SET_SEARCH:
+      return Object.assign({}, state, {searchterm: action.payload})
+      break
     default:
       return state
   }

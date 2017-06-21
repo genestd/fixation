@@ -1,5 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as Actions from '../store/actions'
 
 class FixationNav extends React.Component{
 
@@ -25,8 +28,13 @@ class FixationNav extends React.Component{
   componentWillUnmount = () => {
     this.state.nav.destroy()
   }
-  render(){
 
+  submitSearch = () => {
+    var term = $('#searchterm').val()
+    this.props.actions.setSearch(term)
+  }
+
+  render(){
     return(
       <div data-sticky-container>
 
@@ -36,8 +44,8 @@ class FixationNav extends React.Component{
           </div>
           <div className="columns small-8 medium-9">
             <div className="input-group">
-              <span className="input-group-label"><i className="icon-search"></i></span>
-              <input className="input-group-field" type="text" placeholder="Search"/>
+              <span className="input-group-label pointer" onClick={this.submitSearch}><i className="icon-search"></i></span>
+              <input className="input-group-field" type="text" placeholder="Search" id="searchterm"/>
             </div>
           </div>
           <div className="columns small-1 text-center">
@@ -52,4 +60,15 @@ class FixationNav extends React.Component{
   }
 }
 
-export default FixationNav
+const mapStateToProps = (state) => {
+  return({
+    fixation: state.fixation
+  })
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return({
+    actions: bindActionCreators(Actions, dispatch)
+  })
+}
+export default connect(mapStateToProps, mapDispatchToProps)(FixationNav)

@@ -200,6 +200,13 @@ body{
   font-weight: bold;
   font-size: 14px;
 }
+.card-filter{
+  background-color: #ccc;
+  border-radius: 6px;
+  margin: 5px;
+  font-size: 28px;
+  padding: 0 10px;
+}
 /*************************
 * Action Icons
 **************************/
